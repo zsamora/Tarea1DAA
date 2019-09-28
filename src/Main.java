@@ -5,7 +5,7 @@ public class Main {
 
     // Parámetros
     public final static int M = 160;
-    private static final int N = (int) Math.pow(2, 1);
+    private static final int N = (int) Math.pow(2, 14);
     public static int DISK_ACCESSES = 0;
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     // Strings en memoria externa
