@@ -4,8 +4,10 @@ import java.util.Random;
 public class Main {
 
     // Parámetros
-    public final static int M = 160;
+    // -Xmx 1GB (maximo uso de RAM) -Xms 64MB (minimo uso de RAM)
     private static final int N = (int) Math.pow(2, 14);
+    private static final int B = (int) Math.pow(2, 10);
+    public final static int M = 20*B;
     public static int DISK_ACCESSES = 0;
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     // Strings en memoria externa
@@ -36,11 +38,14 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        // Warm up
+        // Funcion aqui
+
+        // Prueba real
         startTime = System.currentTimeMillis();
         // Funcion aqui
         endTime = System.currentTimeMillis();
-        System.out.println("Tiempo promedio: " + (endTime - startTime) + " milisegundos");
+        System.out.println("Tiempo total: " + (endTime - startTime) + " milisegundos");
         System.out.println("N° total de accesos a disco: " + DISK_ACCESSES);
-        System.out.println("Tiempo total de búsquedas: " + (endTime - startTime) + " milisegundos");
     }
 }
