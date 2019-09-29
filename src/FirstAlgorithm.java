@@ -8,7 +8,7 @@ public class FirstAlgorithm {
     String Y;
     String IntegerList;
     ArrayList<String> arrayX;
-    ArrayList<Character> arrayY;
+    ArrayList<String> arrayY;
     ArrayList<ArrayList<Integer>> arrayInts;
     int upLeft = 0;
     int downLeft = 1;
@@ -16,9 +16,6 @@ public class FirstAlgorithm {
     public FirstAlgorithm(int M, int B) {
         this.M = M;
         this.B = B;
-        this.arrayX = new ArrayList<String>();
-        this.arrayY = new ArrayList<Character>();
-        this.arrayInts = new ArrayList<ArrayList<Integer>>();
     }
 
     public void calculateDistance(String X, String Y, String IntegerList, int N) throws IOException, ClassNotFoundException {
@@ -26,44 +23,47 @@ public class FirstAlgorithm {
         this.Y = Y;
         this.IntegerList = IntegerList;
         int row = 0;
-        readBlocks();
-        System.out.println(arrayX);
-        System.out.println(arrayInts);
-        /*while (row < N) {
+        int col = 0;
+        /*System.out.println(arrayX);
+        System.out.println(arrayInts);*/
+        while (row < N) {
+            // Reiniciamos los arrays en memoria para el primer string y los valores calculados
+            this.arrayX = new ArrayList<String>();
             if (row % this.B == 0)
                 readRows(row);
-            calculateRow(upLeft, downLeft, row);
+            // Leemos el string de un bloque cada uno
+            while (col < N / this.B) {
+                this.arrayInts = new ArrayList<ArrayList<Integer>>();
+                // Abrimos los Stream para lectura de archivos
+                FileInputStream fisX = new FileInputStream(X);
+                ObjectInputStream oisX = new ObjectInputStream(fisX);
+                FileInputStream fisInt = new FileInputStream(IntegerList);
+                ObjectInputStream oisInt = new ObjectInputStream(fisInt);
+                // Llenamos la memoria con (M / (B * 5)) bloques, pues un bloque de String=8 char=8 bytes necesita
+                // 4 bloques de Integer = 2 int = 8 bytes cada uno, con lo que obtenemos M / (B * 5)
+                this.arrayX.add((String) oisX.readObject());
+                for (int j = 0; j < 4 ; j++)
+                    this.arrayInts.add((ArrayList<Integer>) oisInt.readObject());
+                oisX.close();
+                fisX.close();
+                oisInt.close();
+                fisInt.close();
+                calculateRow(upLeft, downLeft, row);
+                writeRow();
+            }
             row += 1;
             upLeft += 1;
             downLeft += 1;
-        }*/
-    }
-    public void readBlocks() throws IOException, ClassNotFoundException {
-        FileInputStream fisX = new FileInputStream(X);
-        ObjectInputStream oisX = new ObjectInputStream(fisX);
-        FileInputStream fisInt = new FileInputStream(IntegerList);
-        ObjectInputStream oisInt = new ObjectInputStream(fisInt);
-        // M / 5 pues son 1 byte char + 4 byte int resultado = 5 bytes
-        for (int i = 0; i < this.M / this.B; i++) {
-            if ((i + 1) % 4 == 0) {
-                String x = (String) oisX.readObject();
-                arrayX.add(x);
-            }
-            arrayInts.add((ArrayList<Integer>) oisInt.readObject());
-        }
-        oisX.close();
-        fisX.close();
-        oisInt.close();
-        fisInt.close();
-    }
-    public void readRows(int row) throws IOException {
-        BufferedReader readerY = new BufferedReader(new FileReader(Y));
-        char[] bufferY = new char[this.B];
-        readerY.read(bufferY, row, this.B);
-        for (char y : bufferY) {
-            arrayY.add(y);
         }
     }
+    public void readBlocks() throws IOException, ClassNotFoundException {  }
+    public void readRows(int row) throws IOException, ClassNotFoundException {
+        this.arrayY = new ArrayList<String>();
+        FileInputStream fisY = new FileInputStream(Y);
+        ObjectInputStream oisY = new ObjectInputStream(fisY);
+        this.arrayY.add((String) oisY.readObject());
+    }
+
     public void calculateRow(int upLeft, int downLeft, int row) {
         for (int i = 0; i < this.arrayInts.size(); i ++) {
             /*if (arrayX.get(i) != arrayY.get(row)) {

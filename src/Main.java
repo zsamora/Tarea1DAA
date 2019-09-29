@@ -56,13 +56,13 @@ public class Main {
         fosX.close();
         fosY.close();
         // Leer X por bloques
-        FileInputStream fisX = new FileInputStream(X);
+        /*FileInputStream fisX = new FileInputStream(X);
         ObjectInputStream oisX = new ObjectInputStream(fisX);
         for(int j = 0; j < (int) Math.ceil((1.0 * N)/B); j++) {
             System.out.println(oisX.readObject());
         }
         oisX.close();
-        fisX.close();
+        fisX.close();*/
         // Leer Y por bloques
         /*FileInputStream fisY = new FileInputStream(Y);
         ObjectInputStream oisY = new ObjectInputStream(fisY);
