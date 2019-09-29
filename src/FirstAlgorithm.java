@@ -42,8 +42,8 @@ public class FirstAlgorithm {
             // Array para guardar todos los enteros calculados en la fila
             this.arrayIntsTemp = new ArrayList<Integer>();
             // Seteamos los valores upLeftTemp y downLeftTemp como los de la primera columna
-            this.upLeftTemp = upLeft;
-            this.downLeftTemp = downLeft;
+            this.upLeftTemp = this.upLeft;
+            this.downLeftTemp = this.downLeft;
             // Leemos el primer string (horizontal) de un bloque por iteración (N/B veces)
             while (col < N / this.B) {
                 // Reiniciamos el array del primer string y los valores calculados en el array de enteros
@@ -58,7 +58,7 @@ public class FirstAlgorithm {
                 System.out.println(subX);
                 // Calculamos la fila
                 calculateRow(row % this.B);
-                System.out.println("---- TempInt ----");
+                System.out.println("---- ResInt ----");
                 System.out.println(arrayIntsTemp);
                 col += 1;
             }
@@ -88,16 +88,12 @@ public class FirstAlgorithm {
         System.out.println(subY.charAt(row));
         for (int i = 0; i < this.arrayInts.size(); i ++) {
             up = arrayInts.get(i);
-            if (subX.charAt(i % 4) == subY.charAt(row)) {
+            if (subX.charAt(i) == subY.charAt(row))
                 newDownLeft = Math.min(this.upLeftTemp, Math.min(this.downLeftTemp + 1, up + 1));
-                this.arrayIntsTemp.add(newDownLeft);
-                this.downLeftTemp = newDownLeft;
-            }
-            else {
+            else
                 newDownLeft = Math.min(this.upLeftTemp + 1, Math.min(this.downLeftTemp + 1, up + 1));
-                this.arrayIntsTemp.add(newDownLeft);
-                this.downLeftTemp = newDownLeft;
-            }
+            this.arrayIntsTemp.add(newDownLeft);
+            this.downLeftTemp = newDownLeft;
             this.upLeftTemp = up;
         }
     }
