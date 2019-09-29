@@ -6,47 +6,55 @@ public class FirstAlgorithm {
     int B;
     String X;
     String Y;
-    String IntegerList = "Integers.bin";
+    String IntegerList;
     ArrayList<String> arrayX;
-    ArrayList<String> arrayY;
-    ArrayList<Integer> arrayInts;
+    ArrayList<Character> arrayY;
+    ArrayList<ArrayList<Integer>> arrayInts;
     int upLeft = 0;
     int downLeft = 1;
 
     public FirstAlgorithm(int M, int B) {
         this.M = M;
         this.B = B;
+        this.arrayX = new ArrayList<String>();
+        this.arrayY = new ArrayList<Character>();
+        this.arrayInts = new ArrayList<ArrayList<Integer>>();
     }
 
-    public void calculateDistance(String X, String Y, int N) throws IOException {
+    public void calculateDistance(String X, String Y, String IntegerList, int N) throws IOException, ClassNotFoundException {
         this.X = X;
         this.Y = Y;
+        this.IntegerList = IntegerList;
         int row = 0;
         readBlocks();
-        while (row < N) {
+        System.out.println(arrayX);
+        System.out.println(arrayInts);
+        /*while (row < N) {
             if (row % this.B == 0)
                 readRows(row);
             calculateRow(upLeft, downLeft, row);
             row += 1;
             upLeft += 1;
             downLeft += 1;
-        }
+        }*/
     }
     public void readBlocks() throws IOException, ClassNotFoundException {
         FileInputStream fisX = new FileInputStream(X);
         ObjectInputStream oisX = new ObjectInputStream(fisX);
-        BufferedReader readerInt = new BufferedReader(new FileReader(IntegerList));
-        char[] bufferInt = new char[this.B];
+        FileInputStream fisInt = new FileInputStream(IntegerList);
+        ObjectInputStream oisInt = new ObjectInputStream(fisInt);
         // M / 5 pues son 1 byte char + 4 byte int resultado = 5 bytes
-        for (int i = 0; i < this.M / 5; i += this.B) {
-            System.out.println();
-            arrayX.add((String) oisX.readObject());
-            for (char j : bufferInt) {
-                arrayInts.add(Character.getNumericValue(j));
+        for (int i = 0; i < this.M / this.B; i++) {
+            if ((i + 1) % 4 == 0) {
+                String x = (String) oisX.readObject();
+                arrayX.add(x);
             }
+            arrayInts.add((ArrayList<Integer>) oisInt.readObject());
         }
         oisX.close();
         fisX.close();
+        oisInt.close();
+        fisInt.close();
     }
     public void readRows(int row) throws IOException {
         BufferedReader readerY = new BufferedReader(new FileReader(Y));
@@ -58,10 +66,10 @@ public class FirstAlgorithm {
     }
     public void calculateRow(int upLeft, int downLeft, int row) {
         for (int i = 0; i < this.arrayInts.size(); i ++) {
-            if (arrayX.get(i) != arrayY.get(row)) {
+            /*if (arrayX.get(i) != arrayY.get(row)) {
                 upLeft += 1;
-            }
-            arrayInts.set(i, Math.min(upLeft, Math.min(downLeft + 1, arrayInts.get(i) + 1)));
+            }*/
+            //arrayInts.set(i, Math.min(upLeft, Math.min(downLeft + 1, arrayInts.get(i) + 1)));
         }
     }
 }

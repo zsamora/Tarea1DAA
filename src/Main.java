@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Main {
@@ -13,6 +14,7 @@ public class Main {
     // Strings en memoria externa
     public static final String X = "StringX.bin";
     public static final String Y = "StringY.bin";
+    public static final String IntegerList = "Integers.bin";
     // Librerias
     private static Random random = new Random();
 
@@ -23,15 +25,25 @@ public class Main {
         // String Builder para escribir los strings en memoria
         StringBuilder strBuilderX = new StringBuilder();
         StringBuilder strBuilderY = new StringBuilder();
+        // Array List para escribir los enteros
+        ArrayList<Integer> intBuilder = new ArrayList<Integer>();
         // Output Stream para escribir strings
         FileOutputStream fosX = new FileOutputStream(X);
         ObjectOutputStream oosX = new ObjectOutputStream(fosX);
         FileOutputStream fosY = new FileOutputStream(Y);
         ObjectOutputStream oosY = new ObjectOutputStream(fosY);
+        // Output Stream para escribir enteros iniciales
+        FileOutputStream fosI = new FileOutputStream(IntegerList);
+        ObjectOutputStream oosI = new ObjectOutputStream(fosI);
         // Crear N caracteres y agregarlos al string builder
         for (int i = 0; i < N; i++) {
             strBuilderX.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
             strBuilderY.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
+            intBuilder.add(i+1);
+            if ((i + 1) % (B / 4) == 0 || i == N - 1) {
+                oosI.writeObject(intBuilder);
+                intBuilder = new ArrayList<Integer>();
+            }
             if ((i + 1) % B == 0 || i == N - 1) {
                 oosX.writeObject(strBuilderX.toString());
                 oosY.writeObject(strBuilderY.toString());
@@ -43,25 +55,36 @@ public class Main {
         oosY.close();
         fosX.close();
         fosY.close();
+        // Leer X por bloques
         FileInputStream fisX = new FileInputStream(X);
         ObjectInputStream oisX = new ObjectInputStream(fisX);
-        FileInputStream fisY = new FileInputStream(Y);
-        ObjectInputStream oisY = new ObjectInputStream(fisY);
-        // Leer X por bloques
-        String[] listX = new String[(int) Math.ceil((1.0 * N)/B)];
-        for(int j = 0; j < listX.length; j++) {
+        for(int j = 0; j < (int) Math.ceil((1.0 * N)/B); j++) {
             System.out.println(oisX.readObject());
         }
         oisX.close();
-        oisY.close();
         fisX.close();
-        fisY.close();
+        // Leer Y por bloques
+        /*FileInputStream fisY = new FileInputStream(Y);
+        ObjectInputStream oisY = new ObjectInputStream(fisY);
+        for(int j = 0; j < (int) Math.ceil((1.0 * N)/B); j++) {
+            System.out.println(oisY.readObject());
+        }
+        oisY.close();
+        fisY.close();*/
+        // Leer la lista de enteros por bloque (menos enteros pues son mas pesados)
+        /*FileInputStream fisInt = new FileInputStream(IntegerList);
+        ObjectInputStream oisInt = new ObjectInputStream(fisInt);
+        for(int j = 0; j < (int) Math.ceil((1.0 * N) / (B / 4)); j++) {
+            System.out.println(oisInt.readObject());
+        }
+        oisInt.close();
+        fisInt.close();*/
         // Warm up
-        // Funcion aqui
-
+        FirstAlgorithm firstAlgorithm = new FirstAlgorithm(M, B);
+        firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
         // Prueba real
         startTime = System.currentTimeMillis();
-        // Funcion aqui
+        //firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
         endTime = System.currentTimeMillis();
         System.out.println("Tiempo total: " + (endTime - startTime) + " milisegundos");
         System.out.println("N° total de accesos a disco: " + DISK_ACCESSES);
