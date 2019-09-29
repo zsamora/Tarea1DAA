@@ -6,11 +6,11 @@ public class Main {
 
     // Parámetros
     // -Xmx 1GB (maximo uso de RAM) -Xms 64MB (minimo uso de RAM)
-    private static final int N = (int) Math.pow(2, 3);
-    private static final int B = (int) Math.pow(2, 2);
+    private static final int N = (int) Math.pow(2, 10);
+    private static final int B = (int) Math.pow(2, 10);
     public final static int M = 20 * B;
     public static int DISK_ACCESSES = 0;
-    private static final String ALPHABET = "AB";//CDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final String ALPHABET = "ABCD";//FGHIJKLMNOPQRSTUVWXYZ0123456789";
     // Strings en memoria externa
     public static final String X = "StringX.bin";
     public static final String Y = "StringY.bin";

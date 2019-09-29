@@ -30,10 +30,12 @@ public class FirstAlgorithm {
         int row = 0;
         int col = 0;
         int result = -1;
+        FileInputStream fisY = new FileInputStream(Y);
+        ObjectInputStream oisY = new ObjectInputStream(fisY);
         while (row < N) {
             // Leemos un bloque del segundo string (vertical) si pasamos B filas (caracteres)
             if (row % this.B == 0)
-                readRows();
+                readRows(oisY);
             // Abrimos los Stream para lectura de archivos del primer string y la fila de enteros (previa y temporal)
             FileInputStream fisX = new FileInputStream(X);
             ObjectInputStream oisX = new ObjectInputStream(fisX);
@@ -52,14 +54,14 @@ public class FirstAlgorithm {
                 this.subX = (String) oisX.readObject();
                 for (int j = 0; j < 4 ; j++)
                     this.arrayInts.addAll((ArrayList<Integer>) oisInt.readObject());
-                System.out.println("---- Int ----");
-                System.out.println(arrayInts);
-                System.out.println("---- subX ----");
-                System.out.println(subX);
+                //System.out.println("---- Int ----");
+                //System.out.println(arrayInts);
+                //System.out.println("---- subX ----");
+                //System.out.println(subX);
                 // Calculamos la fila
                 calculateRow(row % this.B);
-                System.out.println("---- ResInt ----");
-                System.out.println(arrayIntsTemp);
+                //System.out.println("---- ResInt ----");
+                //System.out.println(arrayIntsTemp);
                 col += 1;
             }
             oisInt.close();
@@ -75,17 +77,15 @@ public class FirstAlgorithm {
         }
         return result;
     }
-    public void readRows() throws IOException, ClassNotFoundException {
-        FileInputStream fisY = new FileInputStream(Y);
-        ObjectInputStream oisY = new ObjectInputStream(fisY);
+    public void readRows(ObjectInputStream oisY) throws IOException, ClassNotFoundException {
         this.subY = (String) oisY.readObject();
     }
 
     public void calculateRow(int row) throws IOException {
         int newDownLeft;
         int up;
-        System.out.println("---- charY ----");
-        System.out.println(subY.charAt(row));
+        //System.out.println("---- charY ----");
+        //System.out.println(subY.charAt(row));
         for (int i = 0; i < this.arrayInts.size(); i ++) {
             up = arrayInts.get(i);
             if (subX.charAt(i) == subY.charAt(row))
