@@ -9,9 +9,9 @@ public class FirstAlgorithm {
     String IntegerList;
     ArrayList<String> arrayX;
     ArrayList<String> arrayY;
-    ArrayList<ArrayList<Integer>> arrayInts;
-    int upLeft = 0;
-    int downLeft = 1;
+    ArrayList<Integer> arrayInts;
+    ArrayList<Integer> arrayIntsTemp;
+    String IntegerListTemp = "IntegersTemp.bin";
 
     public FirstAlgorithm(int M, int B) {
         this.M = M;
@@ -24,39 +24,41 @@ public class FirstAlgorithm {
         this.IntegerList = IntegerList;
         int row = 0;
         int col = 0;
-        /*System.out.println(arrayX);
-        System.out.println(arrayInts);*/
+        int upLeft = 0;
+        int downLeft = 1;
         while (row < N) {
-            // Reiniciamos los arrays en memoria para el primer string y los valores calculados
-            this.arrayX = new ArrayList<String>();
+            // Leemos un bloque del segundo string si pasamos B filas (caracteres)
             if (row % this.B == 0)
                 readRows(row);
-            // Leemos el string de un bloque cada uno
+            System.out.println(arrayY);
+            // Abrimos los Stream para lectura de archivos del primer string y la fila de enteros (previa y temporal)
+            FileInputStream fisX = new FileInputStream(X);
+            ObjectInputStream oisX = new ObjectInputStream(fisX);
+            FileInputStream fisInt = new FileInputStream(IntegerList);
+            ObjectInputStream oisInt = new ObjectInputStream(fisInt);
+            // Array para guardar todos los enteros calculados en la fila
+            this.arrayIntsTemp = new ArrayList<Integer>();
+            // Leemos el segundo string de un bloque por iteración (N/B veces)
             while (col < N / this.B) {
-                this.arrayInts = new ArrayList<ArrayList<Integer>>();
-                // Abrimos los Stream para lectura de archivos
-                FileInputStream fisX = new FileInputStream(X);
-                ObjectInputStream oisX = new ObjectInputStream(fisX);
-                FileInputStream fisInt = new FileInputStream(IntegerList);
-                ObjectInputStream oisInt = new ObjectInputStream(fisInt);
-                // Llenamos la memoria con (M / (B * 5)) bloques, pues un bloque de String=8 char=8 bytes necesita
-                // 4 bloques de Integer = 2 int = 8 bytes cada uno, con lo que obtenemos M / (B * 5)
+                // Reiniciamos el array del primer string y los valores calculados en el array de enteros
+                this.arrayX = new ArrayList<String>();
+                this.arrayInts = new ArrayList<Integer>();
+                // Llenamos la memoria solo con un bloque de String, que tiene 4 bloques de Integer asociado
                 this.arrayX.add((String) oisX.readObject());
                 for (int j = 0; j < 4 ; j++)
-                    this.arrayInts.add((ArrayList<Integer>) oisInt.readObject());
-                oisX.close();
-                fisX.close();
-                oisInt.close();
-                fisInt.close();
+                    this.arrayInts.addAll((ArrayList<Integer>) oisInt.readObject());
                 calculateRow(upLeft, downLeft, row);
                 writeRow();
             }
             row += 1;
             upLeft += 1;
             downLeft += 1;
+            oisX.close();
+            fisX.close();
+            oisInt.close();
+            fisInt.close();
         }
     }
-    public void readBlocks() throws IOException, ClassNotFoundException {  }
     public void readRows(int row) throws IOException, ClassNotFoundException {
         this.arrayY = new ArrayList<String>();
         FileInputStream fisY = new FileInputStream(Y);
@@ -64,12 +66,37 @@ public class FirstAlgorithm {
         this.arrayY.add((String) oisY.readObject());
     }
 
-    public void calculateRow(int upLeft, int downLeft, int row) {
+    public void calculateRow(int upLeft, int downLeft, int row) throws IOException {
+        int newDownLeft;
         for (int i = 0; i < this.arrayInts.size(); i ++) {
-            /*if (arrayX.get(i) != arrayY.get(row)) {
-                upLeft += 1;
-            }*/
-            //arrayInts.set(i, Math.min(upLeft, Math.min(downLeft + 1, arrayInts.get(i) + 1)));
+            if (arrayX.get(i % 4) == arrayY.get(row)) {
+                newDownLeft = Math.min(upLeft, Math.min(downLeft + 1, arrayInts.get(i) + 1));
+                this.arrayIntsTemp.add(newDownLeft);
+                downLeft = newDownLeft;
+            }
+            else {
+                newDownLeft = Math.min(upLeft + 1, Math.min(downLeft + 1, arrayInts.get(i) + 1));
+                this.arrayIntsTemp.add(newDownLeft);
+                downLeft = newDownLeft;
+            }
         }
+        return newDownleft;
+    }
+
+    public void writeRow() throws IOException {
+        // Array List para escribir los enteros
+        ArrayList<Integer> intTempBuilder = new ArrayList<Integer>();
+        // Output Stream para escribir enteros temporales
+        FileOutputStream fosI = new FileOutputStream(IntegerListTemp);
+        ObjectOutputStream oosI = new ObjectOutputStream(fosI);
+        for (int i = 0; i < arrayIntsTemp.size(); i++) {
+            if ((i + 1) % (B / 4) == 0) {
+                System.out.println(intTempBuilder);
+                oosI.writeObject(intTempBuilder);
+                intTempBuilder = new ArrayList<Integer>();
+            }
+        }
+        fosI.close();
+        oosI.close();
     }
 }
