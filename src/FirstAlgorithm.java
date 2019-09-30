@@ -52,8 +52,10 @@ public class FirstAlgorithm {
                 this.arrayInts = new ArrayList<Integer>();
                 // Llenamos la memoria solo con un bloque de String, que tiene 4 bloques de Integer asociado
                 this.subX = (String) oisX.readObject();
+                Main.DISK_ACCESSES++;
                 for (int j = 0; j < 4 ; j++)
                     this.arrayInts.addAll((ArrayList<Integer>) oisInt.readObject());
+                    Main.DISK_ACCESSES++;
                 //System.out.println("---- Int ----");
                 //System.out.println(arrayInts);
                 //System.out.println("---- subX ----");
@@ -79,6 +81,7 @@ public class FirstAlgorithm {
     }
     public void readRows(ObjectInputStream oisY) throws IOException, ClassNotFoundException {
         this.subY = (String) oisY.readObject();
+        Main.DISK_ACCESSES++;
     }
 
     public void calculateRow(int row) throws IOException {
@@ -108,6 +111,7 @@ public class FirstAlgorithm {
             intTempBuilder.add(arrayIntsTemp.get(i));
             if ((i + 1) % (B / 4) == 0) {
                 oosI.writeObject(intTempBuilder);
+                Main.DISK_ACCESSES++;
                 intTempBuilder = new ArrayList<Integer>();
             }
         }

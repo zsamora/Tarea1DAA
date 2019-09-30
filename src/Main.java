@@ -42,11 +42,14 @@ public class Main {
             intBuilder.add(i+1);
             if ((i + 1) % (B / 4) == 0 || i == N - 1) {
                 oosI.writeObject(intBuilder);
+                DISK_ACCESSES ++;
                 intBuilder = new ArrayList<Integer>();
             }
             if ((i + 1) % B == 0 || i == N - 1) {
                 oosX.writeObject(strBuilderX.toString());
+                DISK_ACCESSES ++;
                 oosY.writeObject(strBuilderY.toString());
+                DISK_ACCESSES ++;
                 strBuilderX = new StringBuilder();
                 strBuilderY = new StringBuilder();
             }
