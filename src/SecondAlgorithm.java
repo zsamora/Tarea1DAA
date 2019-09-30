@@ -57,6 +57,9 @@ public class SecondAlgorithm {
         char[] partialX = new char[blocks*128];
         char[] partialY = new char[blocks*128];
 
+        //
+
+
         //cantidad de iteraciones (horizontal) (total es it al cuadrado)
         int it = (N/128)/blocks;
 
