@@ -10,16 +10,14 @@ public class SecondAlgorithm {
     int B;
     String filesDir="C:\\Users\\Agustín\\Desktop\\Material Universidad\\2019-2\\Diseño y Análisis de Algoritmos\\Tarea 1\\files";
     ObjectOutputStream oosH;
-    ObjectOutputStream oosV;
     String HorizontalList;
     String VerticalList;
 
 
-    public SecondAlgorithm(int M, int B, ObjectOutputStream oosH, ObjectOutputStream oosV) {
+    public SecondAlgorithm(int M, int B, ObjectOutputStream oosH) {
         this.M = M;
         this.B = B;
         this.oosH = oosH;
-        this.oosV = oosV;
     }
 
     //leer la frontera de entrada y almacenarla en un arreglo que contenga espacio para los nuevos elementos (inFrontier)
@@ -45,28 +43,28 @@ public class SecondAlgorithm {
 
     }
 
-    public int calculateDistance(String X, String Y, String HorizontalList, String VerticalList) throws IOException, ClassNotFoundException {
+    public int calculateDistance(String X, String Y, String HorizontalList, String VerticalList, int N) throws IOException, ClassNotFoundException {
         this.X = X;
         this.Y = Y;
         this.HorizontalList = HorizontalList;
         this.VerticalList = VerticalList;
-        //cantidad de bloques del string que se leen en cada iteración
-        int blocks=1;
-        int totalUsed=2*blocks+4*2*blocks+4*blocks*blocks;
-        while(totalUsed<M){
+        // Cantidad de bloques del string que se leen en cada iteración
+        int blocks = 1;
+        // (bloques X + bloques Y) + (frontera X + frontera Y) * size(int) + (cuadrícula interna) * size(int)
+        int totalUsed = 2*blocks + 4*2*blocks + 4*blocks*blocks;
+        // Calcular cantidad de bloques
+        while (totalUsed < M)
             blocks++;
-        }
-        if(totalUsed>M){
+        if (totalUsed > M)
             blocks--;
-        }
 
-        //Elementos a almacenar en memoria principal
-        int[][] table=new int[blocks*128+1][blocks*128+1];
-        char[] partialX = new char[blocks*128];
-        char[] partialY = new char[blocks*128];
+        // Elementos a almacenar en memoria principal
+        int[][] table = new int[blocks*B+1][blocks*B+1];
+        char[] partialX;
+        char[] partialY;
 
-        //cantidad de iteraciones (horizontal) (total es it al cuadrado)
-        int it = (N/128)/blocks;
+        // Cantidad de iteraciones (horizontal) (total es it al cuadrado)
+        int it = (N / B * blocks);
 
         //creamos los streams de lectura y escritura
         //Para las columnas

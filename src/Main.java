@@ -67,6 +67,7 @@ public class Main {
         oosX.close();
         oosY.close();
         oosI.close();
+        oosV.close();
         fosX.close();
         fosY.close();
         fosI.close();
@@ -92,11 +93,12 @@ public class Main {
         fisY.close();
         // Warm up
         FirstAlgorithm firstAlgorithm = new FirstAlgorithm(M, B);
-        SecondAlgorithm secondAlgorithm = new SecondAlgorithm(M, B, oosH, oosV);
+        SecondAlgorithm secondAlgorithm = new SecondAlgorithm(M, B, oosH);
         //firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
         // Prueba real
         startTime = System.currentTimeMillis();
         int distance = firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
+        //int distance2 = secondAlgorithm.calculateDistance(X, Y, HorizontalList, VerticalList, N);
         endTime = System.currentTimeMillis();
         System.out.println();
         System.out.print("La distancia es: ");
