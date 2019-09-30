@@ -2,19 +2,19 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class FirstAlgorithm {
-    int M; // Memoria a usar
-    int B; // Tamaño del bloque
-    int upLeft; // Variable que guarda el valor de la casilla de la diagonal izquierda superior
-    int downLeft; // Variable que guarda el valor de la casilla de la diagonal izquierda inferior
-    int upLeftTemp; // Variables temporales, que se modifican cuando se itera dentro de una misma fila
+    int M;
+    int B;
+    int upLeft;
+    int downLeft;
+    int upLeftTemp;
     int downLeftTemp;
-    String X; // Archivo donde está guardado el string X (horizontal)
-    String Y; // Archivo donde está guardado el string Y (horizontal)
-    String IntegerList; // Archivo donde está guardado el arreglo de enteros iniciales (del 1 a N por bloques)
-    String subX; // Substring del string X utilizado para comparar
-    String subY; // Substring del string Y utilizado para comparar
-    ArrayList<Integer> arrayInts; // Arreglo de enteros leídos del archivo de enteros
-    ArrayList<Integer> arrayIntsTemp; // Arreglo de enteros temporales resultantes del calculo
+    String X;
+    String Y;
+    String IntegerList;
+    String subX;
+    String subY;
+    ArrayList<Integer> arrayInts;
+    ArrayList<Integer> arrayIntsTemp;
 
     public FirstAlgorithm(int M, int B) {
         this.M = M;
@@ -112,8 +112,8 @@ public class FirstAlgorithm {
         for (int i = 0; i < arrayIntsTemp.size(); i++) {
             intTempBuilder.add(arrayIntsTemp.get(i));
             if ((i + 1) % (B / 4) == 0) {
-                Main.DISK_ACCESSES++;
                 oosI.writeObject(intTempBuilder);
+                Main.DISK_ACCESSES++;
                 intTempBuilder = new ArrayList<Integer>();
             }
         }
