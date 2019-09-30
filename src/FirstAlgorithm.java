@@ -51,15 +51,18 @@ public class FirstAlgorithm {
             // Seteamos los valores upLeftTemp y downLeftTemp como los de la columna inicial
             this.upLeftTemp = this.upLeft;
             this.downLeftTemp = this.downLeft;
-            // Leemos el string X (horizontal), de a un bloque por iteración (N/B veces) TODO
-            while (col < N / this.B) {
+            // Leemos el string X (horizontal), de a X bloques por iteración (N/B veces)
+            while (col < N / (this.B * this.M / (20 * this.B))) {
                 // Reiniciamos el array del primer string y los valores calculados en el array de enteros
                 this.arrayInts = new ArrayList<Integer>();
-                // Llenamos la memoria solo con un bloque de caracteres, que tiene 4 bloques de enteros asociado TODO
-                this.subX = (String) oisX.readObject();
-                for (int j = 0; j < 4 ; j++)
-                    this.arrayInts.addAll((ArrayList<Integer>) oisInt.readObject());
-                Main.DISK_ACCESSES+=5;
+                // Llenamos la memoria con k bloques de strings, que tiene 4 bloques de enteros asociado
+                this.subX = "";
+                for (int k = 0; k < this.M / (20 * this.B); k++) {
+                    this.subX += (String) oisX.readObject();
+                    for (int j = 0; j < 4 ; j++)
+                        this.arrayInts.addAll((ArrayList<Integer>) oisInt.readObject());
+                    Main.DISK_ACCESSES+=5;
+                }
                 //System.out.println("---- Int ----");
                 //System.out.println(arrayInts);
                 //System.out.println("---- subX ----");

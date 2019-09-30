@@ -6,8 +6,8 @@ public class Main {
 
     // Parámetros
     // -Xmx 1GB (maximo uso de RAM) -Xms 64MB (minimo uso de RAM)
-    private static final int N = (int) Math.pow(2, 10);
-    private static final int B = (int) Math.pow(2, 10);
+    private static final int N = (int) Math.pow(2, 4);
+    private static final int B = (int) Math.pow(2, 3);
     public final static int M = 20 * B;
     public static int DISK_ACCESSES = 0;
     private static final String ALPHABET = "ABCD";//FGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -15,6 +15,8 @@ public class Main {
     public static final String X = "StringX.bin";
     public static final String Y = "StringY.bin";
     public static final String IntegerList = "Integers.bin";
+    public static final String HorizontalList = "Horizontal.bin";
+    public static final String VerticalList = "Vertical.bin";
     // Librerias
     private static Random random = new Random();
 
@@ -35,6 +37,12 @@ public class Main {
         // Output Stream para escribir enteros iniciales
         FileOutputStream fosI = new FileOutputStream(IntegerList);
         ObjectOutputStream oosI = new ObjectOutputStream(fosI);
+        // Output Stream para escribir fronteras horizontales
+        FileOutputStream fosH = new FileOutputStream(HorizontalList);
+        ObjectOutputStream oosH = new ObjectOutputStream(fosH);
+        // Output Stream para escribir fronteras verticales
+        FileOutputStream fosV = new FileOutputStream(VerticalList);
+        ObjectOutputStream oosV = new ObjectOutputStream(fosV);
         // Crear N caracteres y agregarlos al string builder
         for (int i = 0; i < N; i++) {
             strBuilderX.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
@@ -42,8 +50,10 @@ public class Main {
             intBuilder.add(i+1);
             if ((i + 1) % (B / 4) == 0 || i == N - 1) {
                 oosI.writeObject(intBuilder);
-                DISK_ACCESSES ++;
+                oosH.writeObject(intBuilder);
+                oosV.writeObject(intBuilder);
                 intBuilder = new ArrayList<Integer>();
+                DISK_ACCESSES +=3;
             }
             if ((i + 1) % B == 0 || i == N - 1) {
                 oosX.writeObject(strBuilderX.toString());
@@ -89,7 +99,7 @@ public class Main {
         System.out.print("La distancia es: ");
         System.out.println(distance);
         // Leer la lista de enteros por bloque (menos enteros pues son mas pesados)
-        /*FileInputStream fisInt = new FileInputStream(IntegerList);
+        /*FileInputStream fisInt = new FileInputStream(HorizontalList);
         ObjectInputStream oisInt = new ObjectInputStream(fisInt);
         System.out.println("---- Ints ----");
         for(int j = 0; j < (int) Math.ceil((1.0 * N) / (B / 4)); j++) {
