@@ -9,11 +9,17 @@ public class SecondAlgorithm {
     int M;
     int B;
     String filesDir="C:\\Users\\Agustín\\Desktop\\Material Universidad\\2019-2\\Diseño y Análisis de Algoritmos\\Tarea 1\\files";
+    ObjectOutputStream oosH;
+    ObjectOutputStream oosV;
+    String HorizontalList;
+    String VerticalList;
 
 
-    public SecondAlgorithm(int M, int B) {
+    public SecondAlgorithm(int M, int B, ObjectOutputStream oosH, ObjectOutputStream oosV) {
         this.M = M;
         this.B = B;
+        this.oosH = oosH;
+        this.oosV = oosV;
     }
 
     //leer la frontera de entrada y almacenarla en un arreglo que contenga espacio para los nuevos elementos (inFrontier)
@@ -39,9 +45,11 @@ public class SecondAlgorithm {
 
     }
 
-    public int calculateDistance(String X, String Y) throws IOException, ClassNotFoundException {
+    public int calculateDistance(String X, String Y, String HorizontalList, String VerticalList) throws IOException, ClassNotFoundException {
         this.X = X;
         this.Y = Y;
+        this.HorizontalList = HorizontalList;
+        this.VerticalList = VerticalList;
         //cantidad de bloques del string que se leen en cada iteración
         int blocks=1;
         int totalUsed=2*blocks+4*2*blocks+4*blocks*blocks;

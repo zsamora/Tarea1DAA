@@ -66,8 +66,10 @@ public class Main {
         }
         oosX.close();
         oosY.close();
+        oosI.close();
         fosX.close();
         fosY.close();
+        fosI.close();
         // Leer X por bloques
         FileInputStream fisX = new FileInputStream(X);
         ObjectInputStream oisX = new ObjectInputStream(fisX);
@@ -90,6 +92,7 @@ public class Main {
         fisY.close();
         // Warm up
         FirstAlgorithm firstAlgorithm = new FirstAlgorithm(M, B);
+        SecondAlgorithm secondAlgorithm = new SecondAlgorithm(M, B, oosH, oosV);
         //firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
         // Prueba real
         startTime = System.currentTimeMillis();
