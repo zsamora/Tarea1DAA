@@ -6,7 +6,7 @@ public class Main {
 
     // Parámetros
     // -Xmx 1GB (maximo uso de RAM) -Xms 64MB (minimo uso de RAM)
-    private static final int N = (int) Math.pow(2, 4);
+    private static final int N = (int) Math.pow(2, 6);
     private static final int B = (int) Math.pow(2, 3);
     public final static int M = 20 * B;
     public static int DISK_ACCESSES = 0;
@@ -97,12 +97,12 @@ public class Main {
         //firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
         // Prueba real
         startTime = System.currentTimeMillis();
-        int distance = firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
-        //int distance2 = secondAlgorithm.calculateDistance(X, Y, HorizontalList, VerticalList, N);
+        //int distance = firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
+        int distance2 = secondAlgorithm.calculateDistance(X, Y, HorizontalList, VerticalList, N);
         endTime = System.currentTimeMillis();
         System.out.println();
         System.out.print("La distancia es: ");
-        System.out.println(distance);
+        System.out.println(distance2);
         // Leer la lista de enteros por bloque (menos enteros pues son mas pesados)
         /*FileInputStream fisInt = new FileInputStream(HorizontalList);
         ObjectInputStream oisInt = new ObjectInputStream(fisInt);
