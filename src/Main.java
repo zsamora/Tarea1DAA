@@ -19,7 +19,9 @@ public class Main {
     public static final String X = "StringX.bin";
     public static final String Y = "StringY.bin";
     public static final String IntegerList = "Integers.bin";
-
+    public static final String HorizontalList = "Horizontal.bin";
+    public static final String VerticalList = "Vertical.bin";
+    
     // Librerias
     private static Random random = new Random();
 
@@ -96,31 +98,54 @@ public class Main {
 
                 // Set algorithms
                 firstAlgorithm = new FirstAlgorithm(m_size[m], B);
+                
+                if(m==0){
+                    // Run first algorithm measuring the time
+                    startTime = System.currentTimeMillis();
+                    int distance = firstAlgorithm.calculateDistance(X, Y, IntegerList, n_size[n]);
+                    endTime = System.currentTimeMillis();
 
-                // Run first algorithm measuring the time
-                startTime = System.currentTimeMillis();
-                int distance = firstAlgorithm.calculateDistance(X, Y, IntegerList, n_size[n]);
-                endTime = System.currentTimeMillis();
-
-                // Print the results
-                System.out.println("");
-                System.out.println("Primer algoritmo:");
-                System.out.print("La distancia es: ");
-                System.out.println(distance);
-                System.out.println("Tiempo total: " + (endTime - startTime) + " milisegundos");
-                System.out.println("N° total de accesos a disco: " + DISK_ACCESSES);
-                System.out.println("");
-                System.out.println("");
+                    // Print the results
+                    System.out.println("");
+                    System.out.println("Primer algoritmo:");
+                    System.out.print("La distancia es: ");
+                    System.out.println(distance);
+                    System.out.println("Tiempo total: " + (endTime - startTime) + " milisegundos");
+                    System.out.println("N° total de accesos a disco: " + DISK_ACCESSES);
+                    System.out.println("");
+                }
 
                 // Simple way to wait between ejecutions
                 int wait = 0;
                 while(wait < 1000000){
                     wait++;
                 }
+                System.out.println("");
 
             }
         }
-        // Leer X por bloques
+        // Output Stream para escribir fronteras horizontales
+        // FileOutputStream fosH = new FileOutputStream(HorizontalList);
+        // ObjectOutputStream oosH = new ObjectOutputStream(fosH);
+        // // Output Stream para escribir fronteras verticales
+        // FileOutputStream fosV = new FileOutputStream(VerticalList);
+        // ObjectOutputStream oosV = new ObjectOutputStream(fosV);
+        // Crear N caracteres y agregarlos al string builder
+        // for (int i = 0; i < N; i++) {
+        //     strBuilderX.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
+        //     strBuilderY.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
+        //     intBuilder.add(i+1);
+        //     if ((i + 1) % (B / 4) == 0 || i == N - 1) {
+        //         oosI.writeObject(intBuilder);
+        //         oosH.writeObject(intBuilder);
+        //         oosV.writeObject(intBuilder);
+        //         intBuilder = new ArrayList<Integer>();
+        //         DISK_ACCESSES +=3;
+
+        // oosI.close();
+        // oosV.close();
+        // fosI.close();
+        // // Leer X por bloques
         // FileInputStream fisX = new FileInputStream(X);
         // ObjectInputStream oisX = new ObjectInputStream(fisX);
         // System.out.println("----- X -----");
@@ -140,5 +165,28 @@ public class Main {
         // System.out.println();
         // oisY.close();
         // fisY.close();
+        // // Warm up
+        // FirstAlgorithm firstAlgorithm = new FirstAlgorithm(M, B);
+        // SecondAlgorithm secondAlgorithm = new SecondAlgorithm(M, B, oosH);
+        // //firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
+        // // Prueba real
+        // startTime = System.currentTimeMillis();
+        // int distance = firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
+        // //int distance2 = secondAlgorithm.calculateDistance(X, Y, HorizontalList, VerticalList, N);
+        // endTime = System.currentTimeMillis();
+        // System.out.println();
+        // System.out.print("La distancia es: ");
+        // System.out.println(distance);
+        // // Leer la lista de enteros por bloque (menos enteros pues son mas pesados)
+        // /*FileInputStream fisInt = new FileInputStream(HorizontalList);
+        // ObjectInputStream oisInt = new ObjectInputStream(fisInt);
+        // System.out.println("---- Ints ----");
+        // for(int j = 0; j < (int) Math.ceil((1.0 * N) / (B / 4)); j++) {
+        //     System.out.println(oisInt.readObject());
+        // }
+        // oisInt.close();
+        // fisInt.close();*/
+        // System.out.println("Tiempo total: " + (endTime - startTime) + " milisegundos");
+        // System.out.println("N° total de accesos a disco: " + DISK_ACCESSES);
     }
 }

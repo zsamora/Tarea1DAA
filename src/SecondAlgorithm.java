@@ -7,7 +7,18 @@ public class SecondAlgorithm {
     String Y;
     int N;
     int M;
-    String filesDir;
+    int B;
+    String filesDir="C:\\Users\\Agustín\\Desktop\\Material Universidad\\2019-2\\Diseño y Análisis de Algoritmos\\Tarea 1\\files";
+    ObjectOutputStream oosH;
+    String HorizontalList;
+    String VerticalList;
+
+
+    public SecondAlgorithm(int M, int B, ObjectOutputStream oosH) {
+        this.M = M;
+        this.B = B;
+        this.oosH = oosH;
+    }
 
     //leer la frontera de entrada y almacenarla en un arreglo que contenga espacio para los nuevos elementos (inFrontier)
 
@@ -32,25 +43,101 @@ public class SecondAlgorithm {
 
     }
 
-    public void calculateDistance(String X, String Y) throws IOException, ClassNotFoundException {
+    public int calculateDistance(String X, String Y, String HorizontalList, String VerticalList, int N) throws IOException, ClassNotFoundException {
         this.X = X;
         this.Y = Y;
-        //cantidad de bloques del string que se leen en cada iteración
-        int blocks=1;
-        int totalUsed=2*blocks+4*2*blocks+4*blocks*blocks;
-        while(totalUsed<M){
+        this.HorizontalList = HorizontalList;
+        this.VerticalList = VerticalList;
+        // Cantidad de bloques del string que se leen en cada iteración
+        int blocks = 1;
+        // (bloques X + bloques Y) + (frontera X + frontera Y) * size(int) + (cuadrícula interna) * size(int)
+        int totalUsed = 2*blocks + 4*2*blocks + 4*blocks*blocks;
+        // Calcular cantidad de bloques
+        while (totalUsed < M)
             blocks++;
-        }
-        if(totalUsed>M){
+        if (totalUsed > M)
             blocks--;
+
+        // Elementos a almacenar en memoria principal
+        int[][] table = new int[blocks*B+1][blocks*B+1];
+        char[] partialX;
+        char[] partialY;
+
+        // Cantidad de iteraciones (horizontal) (total es it al cuadrado)
+        int it = (N / (B * blocks));
+
+        //creamos los streams de lectura y escritura
+        //Para las columnas
+        FileOutputStream fos_c=new FileOutputStream(filesDir + "\\" + "frontier_column.bin");
+        ObjectOutputStream oos_c=new ObjectOutputStream(fos_c);
+        FileInputStream fis_c=new FileInputStream(filesDir + "\\" + "frontier_column.bin");
+        ObjectInputStream ois_c=new ObjectInputStream(fis_c);
+
+        //Para las filas
+        FileOutputStream fos_r=new FileOutputStream(filesDir + "\\" + "frontier_row.bin");
+        ObjectOutputStream oos_r=new ObjectOutputStream(fos_r);
+        FileInputStream fis_r=new FileInputStream(filesDir + "\\" + "frontier_row.bin");
+        ObjectInputStream ois_r=new ObjectInputStream(fis_r);
+
+        //Para los input X e Y
+        FileInputStream fisX = new FileInputStream(X);
+        ObjectInputStream oisX = new ObjectInputStream(fisX);
+        FileInputStream fisY = new FileInputStream(Y);
+        ObjectInputStream oisY = new ObjectInputStream(fisY);
+
+
+
+        //llenamos los archivos de primera columna y primera fila
+        int k=0;
+        //el arreglo auxiliar toma la posicion de la primera fila de la matriz
+        int[] auxArr=table[1];
+        for(int i=0;i<N/blocks;i++){
+            for(int j=0;j<blocks*128+1;j++){
+                auxArr[j]=k;
+                if(j<blocks*128){
+                    k++;
+                }
+            }
+            oos_r.writeObject(auxArr);
+            oos_c.writeObject(auxArr);
         }
-        int[][] table=new int[blocks*128+1][blocks*128+1];
-        //cantidad de iteraciones (horizontal)
-        int it = (N/128)/blocks;
-        for(int i=0;i<it;i++){
-            for(int j=0;j<it;j++){
 
 
+
+
+        //
+
+
+
+        for(int row=0;row<it;row++){
+            for(int col=0;col<it;col++){
+
+                //leemos las porciones de X e Y que corresponden
+                partialX = (char[]) oisX.readObject();
+                partialY = (char[]) oisY.readObject();
+
+                //recuperamos la frontera columna
+                //en caso de encontrarnos al inicio de una fila, leemos del archivo columna
+                if(col==0){
+                     auxArr = (int[]) ois_c.readObject();
+                 //en caso contrario, copiamos la frontera columna de la tabla llenada en la iteracion anterior
+                 }else{
+                     for(int i=0; i<auxArr.length;i++){
+                         auxArr[i]=table[i][auxArr.length-1];
+                     }
+                 }
+                 for(int i=0;i<auxArr.length;i++){
+                     table[i][0]=auxArr[i];
+                 }
+
+                 //ahora traspasamos la fila frontera, que en cualquier caso debemos leer de memoria externa
+                auxArr = (int[]) ois_r.readObject();
+
+                //ahora podemos rellenar la matriz con los nuevos valores
+                fillTable(partialY,partialX,table);
+
+                //luego escribimos la fila frontera resultante
+                oos_r.writeObject(table[blocks*128]);
 
 
 
@@ -59,65 +146,9 @@ public class SecondAlgorithm {
 
 
 
+        return table[128*blocks][128*blocks];
     }
 
-    public void readToTable(int[][] table,String row_name,String column_name,int blockNum){
-
-        int[] destArray=new int[N+1];
-        String name=column_name;
-
-        for(int j=0;j<2;j++) {
-            try {
-                FileInputStream fis = new FileInputStream(filesDir + "\\" + name);
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                destArray = (int[]) ois.readObject();
-                ois.close();
-                fis.close();
-                //System.out.println(object2.toString()); // Despues de leerlo imprimimos sus valores
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            if(j==0){
-                //se inserta la primera columna en la tabla
-                for (int i = 0; i < destArray.length; i++) {
-                    table[i][1] = destArray[i];
-                }
-            }else{
-                //se inserta la primera fila en la tabla
-                table[1]=destArray;
-           }
-            name=row_name;
-        }
-
-
-
-    };
-    public void writeFiles(int[][] table,String row_name,String column_name){
-
-        String name=row_name;
-
-        for(int j=0;j<2;j++) {
-
-            try {
-                FileOutputStream fos = new FileOutputStream(filesDir + "\\" + name);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(table[N + 1]);
-                oos.close();
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if(j==0){
-                //traspasamos los elementos de la ultima columna a la ultima fila para poder leerlos como array.
-                for(int i=0;i<N+1;i++){
-                    table[N+1][i]=table[i][N+1];
-                }
-                name=column_name;
-            }
-
-        }
-    };
 
 
 
@@ -127,17 +158,20 @@ public class SecondAlgorithm {
         int [] arr={1,2,3};
         int [][] mat ={{4,5,6},{7,8,9},{10,11,12}};
         int [][] arr2= new int[2][3];
-        System.out.println(Arrays.toString(arr));
 
-        mat[1]=arr;
+        try {
+            FileOutputStream fos = new FileOutputStream("C:\\Users\\Agustín\\Desktop\\Material Universidad\\2019-2\\Diseño y Análisis de Algoritmos\\Tarea 1\\files" + "\\" + "test.bin");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(arr);
+            oos.close();
+            fos.close();
 
-        System.out.println(Arrays.toString(mat[1]));
-
-        mat[1][1]=200;
-
-        System.out.println(Arrays.toString(arr));
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
+        int res =
     }
 
 
