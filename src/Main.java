@@ -5,7 +5,7 @@ import java.util.Random;
 public class Main {
 
     public static int DISK_ACCESSES;
-    
+
     // alphabet
     private static final String ALPHABET = "ABCDFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -14,14 +14,14 @@ public class Main {
     private static final int[] n_pow = {10, 11, 12, 13};
     private static final int B = (int) Math.pow(2, 10);
     private static final int[] m_size = {B*20, B*40, B*80};
-    
+
     // Strings en memoria externa
     public static final String X = "StringX.bin";
     public static final String Y = "StringY.bin";
     public static final String IntegerList = "Integers.bin";
     public static final String HorizontalList = "Horizontal.bin";
     public static final String VerticalList = "Vertical.bin";
-    
+
     // Librerias
     private static Random random = new Random();
 
@@ -41,7 +41,7 @@ public class Main {
 
         // First algorithm instance
         FirstAlgorithm firstAlgorithm;
-        
+
         // Medir con todas las combinaciones de tamaños.
         for(int n=0; n<n_size.length; n++){
 
@@ -53,11 +53,11 @@ public class Main {
             FileOutputStream fosY = new FileOutputStream(Y);
             ObjectOutputStream oosX = new ObjectOutputStream(fosX);
             ObjectOutputStream oosY = new ObjectOutputStream(fosY);
-            
+
             // Output Stream para escribir enteros iniciales
             FileOutputStream fosI = new FileOutputStream(IntegerList);
             ObjectOutputStream oosI = new ObjectOutputStream(fosI);
-            
+
             // Crear N caracteres y agregarlos al string builder
             for (int i = 0; i < n_size[n]; i++) {
                 strBuilderX.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
@@ -82,7 +82,7 @@ public class Main {
             fosX.close();
             fosY.close();
 
-            int DISK_ACCESSES_TEMP = DISK_ACCESSES; 
+            int DISK_ACCESSES_TEMP = DISK_ACCESSES;
 
             for(int m=0; m<m_size.length; m++){
 
@@ -99,7 +99,7 @@ public class Main {
                 // Set algorithms
                 firstAlgorithm = new FirstAlgorithm(m_size[m], B);
                 // ACA INICIALIZAR EL SEGUNDO ALGORITMO
-                
+
                 if(m==0){
                     // Run first algorithm measuring the time
                     startTime = System.currentTimeMillis();
