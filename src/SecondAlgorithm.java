@@ -58,9 +58,11 @@ public class SecondAlgorithm {
         ArrayList<Integer> row;
         ArrayList<Integer> col;
         ArrayList<Integer> rowaux = new ArrayList<Integer>();
-        String subY = "";
-        //System.out.println("---- iteraciones ----");
-        //System.out.println(it);
+        String subY;
+        //if (it > 1) {
+            //System.out.print("N° de iteraciones: ");
+            //System.out.println(it);
+        //}
         while (i < it) {
             //System.out.println("--i--");
             //System.out.println(i);
@@ -71,6 +73,7 @@ public class SecondAlgorithm {
             ObjectInputStream oisX = new ObjectInputStream(fisX);
             // Se lee la primera columna de submatrices
             col = new ArrayList<Integer>();
+            subY = "";
             // Llenamos la memoria con k bloques de strings, que tiene 4 bloques de enteros asociado
             for (int l = 0; l < blocks; l++) {
                 subY += (String) oisY.readObject();
@@ -147,13 +150,13 @@ public class SecondAlgorithm {
         for (int i = 0; i < col.size(); i++) {
             downLeft = col.get(i);
             upLeftTemp = col.get(i);
+            //System.out.print("[");
             for (int j = 0; j < row.size(); j++) {
                 up = row.get(j);
                 if (subX.charAt(j) == subY.charAt(i))
                     newDownLeft = Math.min(upLeft, Math.min(downLeft + 1, up + 1));
                 else
                     newDownLeft = Math.min(upLeft + 1, Math.min(downLeft + 1, up + 1));
-                //System.out.print("[");
                 //System.out.print(newDownLeft);
                 //System.out.print(",");
                 row.set(j, newDownLeft);

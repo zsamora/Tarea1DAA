@@ -7,7 +7,7 @@ public class Main {
     public static int DISK_ACCESSES;
 
     // alphabet
-    private static final String ALPHABET = "ABCDFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     // sizes
     private static final int[] n_size = {(int)Math.pow(2, 10), (int)Math.pow(2, 11), (int)Math.pow(2, 12), (int)Math.pow(2, 13)};
