@@ -41,6 +41,8 @@ public class Main {
 
         // First algorithm instance
         FirstAlgorithm firstAlgorithm;
+        // Second algorithm instance;
+        SecondAlgorithm secondAlgorithm;
 
         // Medir con todas las combinaciones de tamaños.
         for(int n=0; n<n_size.length; n++){
@@ -54,9 +56,13 @@ public class Main {
             ObjectOutputStream oosX = new ObjectOutputStream(fosX);
             ObjectOutputStream oosY = new ObjectOutputStream(fosY);
 
-            // Output Stream para escribir enteros iniciales
+            // Output Stream para escribir enteros iniciales (y fronteras)
             FileOutputStream fosI = new FileOutputStream(IntegerList);
             ObjectOutputStream oosI = new ObjectOutputStream(fosI);
+            FileOutputStream fosH = new FileOutputStream(HorizontalList);
+            ObjectOutputStream oosH = new ObjectOutputStream(fosH);
+            FileOutputStream fosV = new FileOutputStream(VerticalList);
+            ObjectOutputStream oosV = new ObjectOutputStream(fosV);
 
             // Crear N caracteres y agregarlos al string builder
             for (int i = 0; i < n_size[n]; i++) {
@@ -65,6 +71,8 @@ public class Main {
                 intBuilder.add(i+1);
                 if ((i + 1) % (B / 4) == 0 || i == n_size[n] - 1) {
                     oosI.writeObject(intBuilder);
+                    oosH.writeObject(intBuilder);
+                    oosV.writeObject(intBuilder);
                     DISK_ACCESSES ++;
                     intBuilder = new ArrayList<Integer>();
                 }
@@ -79,8 +87,12 @@ public class Main {
             }
             oosX.close();
             oosY.close();
+            oosI.close();
+            oosV.close();
             fosX.close();
             fosY.close();
+            fosI.close();
+            fosV.close();
 
             int DISK_ACCESSES_TEMP = DISK_ACCESSES;
 
@@ -99,7 +111,7 @@ public class Main {
                 // Set algorithms
                 firstAlgorithm = new FirstAlgorithm(m_size[m], B);
                 // ACA INICIALIZAR EL SEGUNDO ALGORITMO
-
+                secondAlgorithm = new SecondAlgorithm(m_size[m], B, oosH);
                 if(m==0){
                     // Run first algorithm measuring the time
                     startTime = System.currentTimeMillis();
@@ -119,10 +131,10 @@ public class Main {
                 // Set disk accesses again
                 DISK_ACCESSES = DISK_ACCESSES_TEMP;
 
-                // Run seoncd algorithm measuring the time
+                // Run second algorithm measuring the time
                 startTime = System.currentTimeMillis();
                 // ACA CORRER EL SEGUNDO ALGORITMO!!
-                // int distance2 = secondAlgorithm.calculateDistance(X, Y, IntegerList, n_size[n]);
+                int distance2 = secondAlgorithm.calculateDistance(X, Y, HorizontalList, VerticalList, n_size[n]);
                 endTime = System.currentTimeMillis();
 
                 // Print the results
@@ -130,19 +142,14 @@ public class Main {
                 System.out.println("Segundo algoritmo:");
                 System.out.print("La distancia es: ");
                 // AL AGREGAR EL SEGUNDO ALGORITMO DESCOMENTAR LA LINEA SIGUIENTE!!
-                // System.out.println(distance2);
+                System.out.println(distance2);
                 System.out.println("Tiempo total: " + (endTime - startTime) + " milisegundos");
                 System.out.println("N° total de accesos a disco: " + DISK_ACCESSES);
                 System.out.println("");
-
                 System.out.println("");
 
             }
         }
-
-        // oosI.close();
-        // oosV.close();
-        // fosI.close();
         // // Leer X por bloques
         // FileInputStream fisX = new FileInputStream(X);
         // ObjectInputStream oisX = new ObjectInputStream(fisX);
@@ -163,18 +170,6 @@ public class Main {
         // System.out.println();
         // oisY.close();
         // fisY.close();
-        // // Warm up
-        // FirstAlgorithm firstAlgorithm = new FirstAlgorithm(M, B);
-        // SecondAlgorithm secondAlgorithm = new SecondAlgorithm(M, B, oosH);
-        // //firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
-        // // Prueba real
-        // startTime = System.currentTimeMillis();
-        // //int distance = firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
-        // int distance2 = secondAlgorithm.calculateDistance(X, Y, HorizontalList, VerticalList, N);
-        // endTime = System.currentTimeMillis();
-        // System.out.println();
-        // System.out.print("La distancia es: ");
-        // System.out.println(distance2);
         // // Leer la lista de enteros por bloque (menos enteros pues son mas pesados)
         // /*FileInputStream fisInt = new FileInputStream(HorizontalList);
         // ObjectInputStream oisInt = new ObjectInputStream(fisInt);
