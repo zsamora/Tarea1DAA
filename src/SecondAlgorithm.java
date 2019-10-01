@@ -62,8 +62,8 @@ public class SecondAlgorithm {
         //System.out.println("---- iteraciones ----");
         //System.out.println(it);
         while (i < it) {
-            System.out.println("--i--");
-            System.out.println(i);
+            //System.out.println("--i--");
+            //System.out.println(i);
             // Setear la variable auxiliar como el valor de la primera fila de la cuadricula
             auxvar = i* blocks * B;
             // Re abrir archivos para leer X desde el principio
@@ -83,8 +83,8 @@ public class SecondAlgorithm {
             //System.out.println("---- subY ----");
             //System.out.println(subY);
             while (j < it) {
-                System.out.println("--j--");
-                System.out.println(j);
+                //System.out.println("--j--");
+                //System.out.println(j);
                 // Se lee la fila de submatrices que viene en el archivo
                 row = new ArrayList<Integer>();
                 // Llenamos la memoria con k bloques de strings, que tiene 4 bloques de enteros asociado
@@ -142,8 +142,8 @@ public class SecondAlgorithm {
         int downLeft;
         int newDownLeft;
         int upLeftTemp;
-        System.out.println("upleft");
-        System.out.println(upLeft);
+        //System.out.println("upleft");
+        //System.out.println(upLeft);
         for (int i = 0; i < col.size(); i++) {
             downLeft = col.get(i);
             upLeftTemp = col.get(i);
@@ -153,21 +153,21 @@ public class SecondAlgorithm {
                     newDownLeft = Math.min(upLeft, Math.min(downLeft + 1, up + 1));
                 else
                     newDownLeft = Math.min(upLeft + 1, Math.min(downLeft + 1, up + 1));
-                System.out.print("[");
-                System.out.print(newDownLeft);
-                System.out.print(",");
+                //System.out.print("[");
+                //System.out.print(newDownLeft);
+                //System.out.print(",");
                 row.set(j, newDownLeft);
                 downLeft = newDownLeft;
                 upLeft = up;
             }
-            System.out.println("]");
+            //System.out.println("]");
             col.set(i, downLeft);
             upLeft = upLeftTemp;
         }
-        System.out.println("  ----row----  ");
-        System.out.println(row);
-        System.out.println("  ----col----  ");
-        System.out.println(col);
+        //System.out.println("  ----row----  ");
+        //System.out.println(row);
+        //System.out.println("  ----col----  ");
+        //System.out.println(col);
         ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
         res.add(row);
         res.add(col);

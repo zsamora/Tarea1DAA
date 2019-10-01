@@ -94,6 +94,27 @@ public class Main {
             fosI.close();
             fosV.close();
 
+            // Leer X por bloques
+            FileInputStream fisX = new FileInputStream(X);
+            ObjectInputStream oisX = new ObjectInputStream(fisX);
+            System.out.println("----- X -----");
+            for(int j = 0; j < (int) Math.ceil((1.0 * n_size[n])/B); j++) {
+                System.out.print(oisX.readObject());
+            }
+            System.out.println();
+            oisX.close();
+            fisX.close();
+            // Leer Y por bloques
+            FileInputStream fisY = new FileInputStream(Y);
+            ObjectInputStream oisY = new ObjectInputStream(fisY);
+            System.out.println("----- Y -----");
+            for(int j = 0; j < (int) Math.ceil((1.0 * n_size[n])/B); j++) {
+                System.out.print(oisY.readObject());
+            }
+            System.out.println();
+            System.out.println();
+            oisY.close();
+            fisY.close();
             int DISK_ACCESSES_TEMP = DISK_ACCESSES;
 
             for(int m=0; m<m_size.length; m++){
@@ -146,30 +167,8 @@ public class Main {
                 System.out.println("Tiempo total: " + (endTime - startTime) + " milisegundos");
                 System.out.println("N° total de accesos a disco: " + DISK_ACCESSES);
                 System.out.println("");
-                System.out.println("");
-
             }
         }
-        // // Leer X por bloques
-        // FileInputStream fisX = new FileInputStream(X);
-        // ObjectInputStream oisX = new ObjectInputStream(fisX);
-        // System.out.println("----- X -----");
-        // for(int j = 0; j < (int) Math.ceil((1.0 * N)/B); j++) {
-        //     System.out.print(oisX.readObject());
-        // }
-        // System.out.println();
-        // oisX.close();
-        // fisX.close();
-        // // Leer Y por bloques
-        // FileInputStream fisY = new FileInputStream(Y);
-        // ObjectInputStream oisY = new ObjectInputStream(fisY);
-        // System.out.println("----- Y -----");
-        // for(int j = 0; j < (int) Math.ceil((1.0 * N)/B); j++) {
-        //     System.out.print(oisY.readObject());
-        // }
-        // System.out.println();
-        // oisY.close();
-        // fisY.close();
         // // Leer la lista de enteros por bloque (menos enteros pues son mas pesados)
         // /*FileInputStream fisInt = new FileInputStream(HorizontalList);
         // ObjectInputStream oisInt = new ObjectInputStream(fisInt);
