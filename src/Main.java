@@ -10,7 +10,7 @@ public class Main {
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     // sizes
-    private static final int[] n_size = {(int)Math.pow(2, 10), (int)Math.pow(2, 11), (int)Math.pow(2, 12)};//, (int)Math.pow(2, 13)};
+    private static final int[] n_size = {(int)Math.pow(2, 10), (int)Math.pow(2, 11), (int)Math.pow(2, 12), (int)Math.pow(2, 13)};
     private static final int[] n_pow = {10, 11, 12, 13};
     private static final int B = (int) Math.pow(2, 10);
     private static final int[] m_size = {B*20, B*40, B*80};
@@ -71,15 +71,14 @@ public class Main {
                 if ((i + 1) % (B / 4) == 0 || i == n_size[n] - 1) {
                     oosI.writeObject(intBuilder);
                     oosV.writeObject(intBuilder);
-                    DISK_ACCESSES ++;
+                    DISK_ACCESSES++; // 1 para el primer algoritmo o 1 para el segundo
                     intBuilder = new ArrayList<Integer>();
                 }
                 // Escribir en memoria los strings
                 if ((i + 1) % B == 0 || i == n_size[n] - 1) {
                     oosX.writeObject(strBuilderX.toString());
-                    DISK_ACCESSES ++;
                     oosY.writeObject(strBuilderY.toString());
-                    DISK_ACCESSES ++;
+                    DISK_ACCESSES += 2; // 2 para el primer algoritmo o 2 para el segundo
                     strBuilderX = new StringBuilder();
                     strBuilderY = new StringBuilder();
                 }
@@ -115,7 +114,7 @@ public class Main {
             oisY.close();
             fisY.close();
 
-            int DISK_ACCESSES_TEMP = DISK_ACCESSES;
+            int DISK_ACCESSES_TEMP = DISK_ACCESSES; // Accesos a disco inicial antes de ejecutar los algoritmos
 
             for(int m=0; m<m_size.length; m++){
 
@@ -124,28 +123,15 @@ public class Main {
                 System.out.print(n_pow[n]);
                 System.out.print(" y M = B*");
                 System.out.println(m_size[m]/B);
+                System.out.println("");
 
 
                 // Set disk accesses
                 DISK_ACCESSES = DISK_ACCESSES_TEMP;
 
-                // Set algorithms
+                // Set first algorithm
                 firstAlgorithm = new FirstAlgorithm(m_size[m], B);
-                // Se deben escribir las fronteras horizontales antes de instanciar el segundo algoritmo
-                // para dejar el puntero justo al final del archivo
-                FileOutputStream fosH = new FileOutputStream(HorizontalList);
-                ObjectOutputStream oosH = new ObjectOutputStream(fosH);
-                // Reescribir fronteras horizontales
-                for (int i = 0; i < n_size[n]; i++) {
-                    intBuilder.add(i+1);
-                    // Escribir en memoria los enteros
-                    if ((i + 1) % (B / 4) == 0 || i == n_size[n] - 1) {
-                        oosH.writeObject(intBuilder);
-                        DISK_ACCESSES ++;
-                        intBuilder = new ArrayList<Integer>();
-                    }
-                }
-                secondAlgorithm = new SecondAlgorithm(m_size[m], B, oosH);
+
                 if(m==0){
                     // Run first algorithm measuring the time
                     startTime = System.currentTimeMillis();
@@ -165,13 +151,26 @@ public class Main {
                 // Set disk accesses again
                 DISK_ACCESSES = DISK_ACCESSES_TEMP;
 
+                // Se deben escribir las fronteras horizontales justo antes de instanciar el segundo algoritmo
+                // para dejar el puntero justo al final del archivo
+                FileOutputStream fosH = new FileOutputStream(HorizontalList);
+                ObjectOutputStream oosH = new ObjectOutputStream(fosH);
+                for (int i = 0; i < n_size[n]; i++) {
+                    intBuilder.add(i+1);
+                    // Escribir en memoria los enteros
+                    if ((i + 1) % (B / 4) == 0 || i == n_size[n] - 1) {
+                        oosH.writeObject(intBuilder);
+                        DISK_ACCESSES++;
+                        intBuilder = new ArrayList<Integer>();
+                    }
+                }
+                secondAlgorithm = new SecondAlgorithm(m_size[m], B, oosH);
                 // Run second algorithm measuring the time
                 startTime = System.currentTimeMillis();
                 int distance2 = secondAlgorithm.calculateDistance(X, Y, HorizontalList, VerticalList, n_size[n]);
                 endTime = System.currentTimeMillis();
 
                 // Print the results
-                System.out.println("");
                 System.out.println("Segundo algoritmo:");
                 System.out.print("La distancia es: ");
                 // AL AGREGAR EL SEGUNDO ALGORITMO DESCOMENTAR LA LINEA SIGUIENTE!!

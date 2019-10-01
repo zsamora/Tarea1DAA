@@ -38,9 +38,10 @@ public class FirstAlgorithm {
         // Iteración sobre todas las filas del string
         while (row < N) {
             // Leemos un bloque del string Y (vertical), si pasamos B filas (caracteres)
-            if (row % this.B == 0)
+            if (row % this.B == 0) {
                 this.subY = (String) oisY.readObject();
-            Main.DISK_ACCESSES++;
+                Main.DISK_ACCESSES++;
+            }
             // Abrimos los Stream para lectura de archivos del string X (horizontal) y la fila de enteros en memoria
             FileInputStream fisX = new FileInputStream(X);
             ObjectInputStream oisX = new ObjectInputStream(fisX);

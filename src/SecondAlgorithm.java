@@ -40,7 +40,7 @@ public class SecondAlgorithm {
         int blocks = 1;
         // (bloques X + bloques Y) + (frontera X + frontera Y) * size(int) + (cuadrícula interna) * size(int)
         int totalUsed = 2 * blocks + 4 * 2 * blocks + 4 * blocks * blocks;
-        // Calcular cantidad de bloques
+        // Calcular cantidad de bloques por iteracion
         while (totalUsed < (M / this.B) && blocks < (N / this.B)) {
             blocks++;
             totalUsed = 2 * blocks + 4 * 2 * blocks + 4 * blocks * blocks;
@@ -49,22 +49,26 @@ public class SecondAlgorithm {
                 break;
             }
         }
+        // Cantidad de bloques restantes inicial
         int blocksleftrow = (N / this.B);
         int blocksleftcol = blocksleftrow;
+
         // Cantidad de iteraciones (horizontal) (total es it al cuadrado)
         int it = (int) Math.ceil((N * 1.0) / (B * blocks));
-        // Variable de la izquierda superior
+        // Variable auxiliar de la izquierda superior
         int auxvar = 0;
-        int i = 0; // fila de submatriz
-        int j = 0; // columna de submatriz
+        // Fila (i) y Columna (j) de las submatrices
+        int i = 0;
+        int j = 0;
+        // Arreglos para guardar los resultados de los calculos de las submatrices
         ArrayList<Integer> row;
         ArrayList<Integer> col;
         ArrayList<Integer> rowaux = new ArrayList<Integer>();
         String subY;
-        if (it > 1) {
+        /*if (it > 1) {
             System.out.print("N° de iteraciones: ");
             System.out.println(it);
-        }
+        }*/
 
         while (i < it) {
             //System.out.println("--i--");
