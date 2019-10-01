@@ -52,13 +52,28 @@ public class FirstAlgorithm {
             // Seteamos los valores upLeftTemp y downLeftTemp como los de la columna inicial
             this.upLeftTemp = this.upLeft;
             this.downLeftTemp = this.downLeft;
+            // Bloques que se pueden leer por iteracion
+            int blocks = this.M / (20 * this.B);
+            int blocksleft = N / this.B;
+            // Si se pueden leer más bloques de los que hay
+            if (blocksleft < blocks)
+                blocks = blocksleft;
+            // Bloques restantes en la fila
+            // Bloques que se leeran
+            int nblocks;
+            // Iteraciones segun el maximo de bloques a leer
+            int it = (int) Math.ceil(blocksleft * 1.0 / blocks);
             // Leemos el string X (horizontal), de a X bloques por iteración (N/B veces)
-            while (col < N / (this.B * this.M / (20 * this.B))) {
+            while (col < it) {
+                if (blocksleft >= blocks)
+                    nblocks = blocks;
+                else
+                    nblocks = blocksleft;
                 // Reiniciamos el array del primer string y los valores calculados en el array de enteros
                 this.arrayInts = new ArrayList<Integer>();
                 // Llenamos la memoria con k bloques de strings, que tiene 4 bloques de enteros asociado
                 this.subX = "";
-                for (int k = 0; k < this.M / (20 * this.B); k++) {
+                for (int k = 0; k < nblocks; k++) {
                     this.subX += (String) oisX.readObject();
                     for (int j = 0; j < 4 ; j++)
                         this.arrayInts.addAll((ArrayList<Integer>) oisInt.readObject());
@@ -73,6 +88,7 @@ public class FirstAlgorithm {
                 //System.out.println("---- ResInt ----");
                 //System.out.println(arrayIntsTemp);
                 col += 1;
+                blocksleft -= nblocks;
             }
             oisInt.close();
             fisInt.close();
