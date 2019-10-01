@@ -10,8 +10,9 @@ public class Main {
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     // sizes
-    private static final int[] n_size = {(int)Math.pow(2, 10), (int)Math.pow(2, 11), (int)Math.pow(2, 12), (int)Math.pow(2, 13)};
-    private static final int[] n_pow = {10, 11, 12, 13};
+    private static final int[] n_size = {(int)Math.pow(2, 10), (int)Math.pow(2, 11), (int)Math.pow(2, 12),
+                                         (int)Math.pow(2, 13), (int)Math.pow(2, 14), (int)Math.pow(2, 15), (int)Math.pow(2, 16)};
+    private static final int[] n_pow = {10, 11, 12, 13, 14, 15, 16};
     private static final int B = (int) Math.pow(2, 10);
     private static final int[] m_size = {B*20, B*40, B*80};
 
@@ -132,14 +133,13 @@ public class Main {
                 // Set first algorithm
                 firstAlgorithm = new FirstAlgorithm(m_size[m], B);
 
-                if(m==0){
+                if(m==0 && n_pow[n] <= 13){
                     // Run first algorithm measuring the time
                     startTime = System.currentTimeMillis();
                     int distance = firstAlgorithm.calculateDistance(X, Y, IntegerList, n_size[n]);
                     endTime = System.currentTimeMillis();
 
                     // Print the results
-                    System.out.println("");
                     System.out.println("Primer algoritmo:");
                     System.out.print("La distancia es: ");
                     System.out.println(distance);
@@ -168,6 +168,7 @@ public class Main {
                 // Run second algorithm measuring the time
                 startTime = System.currentTimeMillis();
                 int distance2 = secondAlgorithm.calculateDistance(X, Y, HorizontalList, VerticalList, n_size[n]);
+                int distance2 = 0;
                 endTime = System.currentTimeMillis();
 
                 // Print the results
