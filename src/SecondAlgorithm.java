@@ -49,8 +49,10 @@ public class SecondAlgorithm {
                 break;
             }
         }
+        int blocksleftrow = (N / this.B);
+        int blocksleftcol = blocksleftrow;
         // Cantidad de iteraciones (horizontal) (total es it al cuadrado)
-        int it = N / (B * blocks);
+        int it = (int) Math.ceil((N * 1.0) / (B * blocks));
         // Variable de la izquierda superior
         int auxvar = 0;
         int i = 0; // fila de submatriz
@@ -59,10 +61,11 @@ public class SecondAlgorithm {
         ArrayList<Integer> col;
         ArrayList<Integer> rowaux = new ArrayList<Integer>();
         String subY;
-        //if (it > 1) {
-            //System.out.print("N° de iteraciones: ");
-            //System.out.println(it);
-        //}
+        if (it > 1) {
+            System.out.print("N° de iteraciones: ");
+            System.out.println(it);
+        }
+
         while (i < it) {
             //System.out.println("--i--");
             //System.out.println(i);
@@ -71,11 +74,21 @@ public class SecondAlgorithm {
             // Re abrir archivos para leer X desde el principio
             FileInputStream fisX = new FileInputStream(X);
             ObjectInputStream oisX = new ObjectInputStream(fisX);
+            // Setea la cantidad de bloques por leer según en que iteracion estamos
+            int nblockscol;
+            if (blocksleftcol >= blocks)
+                nblockscol = blocks;
+            else
+                nblockscol = blocksleftcol;
+            //System.out.print("N° de bloques restantes en la columna: ");
+            //System.out.println(blocksleftcol);
+            //System.out.print("Se leerán en esta iteracion: ");
+            //System.out.println(nblockscol);
             // Se lee la primera columna de submatrices
             col = new ArrayList<Integer>();
             subY = "";
             // Llenamos la memoria con k bloques de strings, que tiene 4 bloques de enteros asociado
-            for (int l = 0; l < blocks; l++) {
+            for (int l = 0; l < nblockscol; l++) {
                 subY += (String) oisY.readObject();
                 for (int k = 0; k < 4; k++)
                     col.addAll((ArrayList<Integer>) oisV.readObject());
@@ -88,11 +101,21 @@ public class SecondAlgorithm {
             while (j < it) {
                 //System.out.println("--j--");
                 //System.out.println(j);
+                int nblocksrow;
+                // Setear cuantos bloques se leeran segun la iteracion en la que estamos
+                if (blocksleftrow >= blocks)
+                    nblocksrow = blocks;
+                else
+                    nblocksrow = blocksleftrow;
+                //System.out.print("N° de bloques restantes en la fila: ");
+                //System.out.println(blocksleftrow);
+                //System.out.print("Se leerán en esta iteracion: ");
+                //System.out.println(nblocksrow);
                 // Se lee la fila de submatrices que viene en el archivo
                 row = new ArrayList<Integer>();
                 // Llenamos la memoria con k bloques de strings, que tiene 4 bloques de enteros asociado
                 String subX = "";
-                for (int l = 0; l < blocks; l++) {
+                for (int l = 0; l < nblocksrow; l++) {
                     subX += (String) oisX.readObject();
                     for (int k = 0; k < 4; k++)
                         row.addAll((ArrayList<Integer>) oisH.readObject());
@@ -126,9 +149,12 @@ public class SecondAlgorithm {
                 //System.out.println("---- subY ----");
                 //System.out.println(subY);
                 j++;
+                blocksleftrow -= nblocksrow;
             }
             i++;
             j = 0;
+            blocksleftcol -= nblockscol;
+            blocksleftrow = (N / this.B);
             fisX.close();
             oisX.close();
         }

@@ -10,7 +10,7 @@ public class Main {
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     // sizes
-    private static final int[] n_size = {(int)Math.pow(2, 10), (int)Math.pow(2, 11), (int)Math.pow(2, 12), (int)Math.pow(2, 13)};
+    private static final int[] n_size = {(int)Math.pow(2, 10), (int)Math.pow(2, 11), (int)Math.pow(2, 12)};//, (int)Math.pow(2, 13)};
     private static final int[] n_pow = {10, 11, 12, 13};
     private static final int B = (int) Math.pow(2, 10);
     private static final int[] m_size = {B*20, B*40, B*80};
@@ -56,26 +56,25 @@ public class Main {
             ObjectOutputStream oosX = new ObjectOutputStream(fosX);
             ObjectOutputStream oosY = new ObjectOutputStream(fosY);
 
-            // Output Stream para escribir enteros iniciales (y fronteras)
+            // Output Stream para escribir enteros iniciales y fronteras verticales
             FileOutputStream fosI = new FileOutputStream(IntegerList);
             ObjectOutputStream oosI = new ObjectOutputStream(fosI);
-            FileOutputStream fosH = new FileOutputStream(HorizontalList);
-            ObjectOutputStream oosH = new ObjectOutputStream(fosH);
             FileOutputStream fosV = new FileOutputStream(VerticalList);
             ObjectOutputStream oosV = new ObjectOutputStream(fosV);
 
-            // Crear N caracteres y agregarlos al string builder
+            // Crear N caracteres y agregarlos al string builder, y los enteros correspondientes
             for (int i = 0; i < n_size[n]; i++) {
                 strBuilderX.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
                 strBuilderY.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
                 intBuilder.add(i+1);
+                // Escribir en memoria los enteros
                 if ((i + 1) % (B / 4) == 0 || i == n_size[n] - 1) {
                     oosI.writeObject(intBuilder);
-                    oosH.writeObject(intBuilder);
                     oosV.writeObject(intBuilder);
                     DISK_ACCESSES ++;
                     intBuilder = new ArrayList<Integer>();
                 }
+                // Escribir en memoria los strings
                 if ((i + 1) % B == 0 || i == n_size[n] - 1) {
                     oosX.writeObject(strBuilderX.toString());
                     DISK_ACCESSES ++;
@@ -85,16 +84,16 @@ public class Main {
                     strBuilderY = new StringBuilder();
                 }
             }
-            oosX.close();
-            oosY.close();
-            oosI.close();
-            oosV.close();
             fosX.close();
             fosY.close();
             fosI.close();
             fosV.close();
+            oosX.close();
+            oosY.close();
+            oosI.close();
+            oosV.close();
 
-            // Leer X por bloques
+            // Leer X para testear
             FileInputStream fisX = new FileInputStream(X);
             ObjectInputStream oisX = new ObjectInputStream(fisX);
             System.out.println("----- X -----");
@@ -104,7 +103,7 @@ public class Main {
             System.out.println();
             oisX.close();
             fisX.close();
-            // Leer Y por bloques
+            // Leer Y para testear
             FileInputStream fisY = new FileInputStream(Y);
             ObjectInputStream oisY = new ObjectInputStream(fisY);
             System.out.println("----- Y -----");
@@ -115,6 +114,7 @@ public class Main {
             System.out.println();
             oisY.close();
             fisY.close();
+
             int DISK_ACCESSES_TEMP = DISK_ACCESSES;
 
             for(int m=0; m<m_size.length; m++){
@@ -131,7 +131,20 @@ public class Main {
 
                 // Set algorithms
                 firstAlgorithm = new FirstAlgorithm(m_size[m], B);
-                // ACA INICIALIZAR EL SEGUNDO ALGORITMO
+                // Se deben escribir las fronteras horizontales antes de instanciar el segundo algoritmo
+                // para dejar el puntero justo al final del archivo
+                FileOutputStream fosH = new FileOutputStream(HorizontalList);
+                ObjectOutputStream oosH = new ObjectOutputStream(fosH);
+                // Reescribir fronteras horizontales
+                for (int i = 0; i < n_size[n]; i++) {
+                    intBuilder.add(i+1);
+                    // Escribir en memoria los enteros
+                    if ((i + 1) % (B / 4) == 0 || i == n_size[n] - 1) {
+                        oosH.writeObject(intBuilder);
+                        DISK_ACCESSES ++;
+                        intBuilder = new ArrayList<Integer>();
+                    }
+                }
                 secondAlgorithm = new SecondAlgorithm(m_size[m], B, oosH);
                 if(m==0){
                     // Run first algorithm measuring the time
@@ -154,7 +167,6 @@ public class Main {
 
                 // Run second algorithm measuring the time
                 startTime = System.currentTimeMillis();
-                // ACA CORRER EL SEGUNDO ALGORITMO!!
                 int distance2 = secondAlgorithm.calculateDistance(X, Y, HorizontalList, VerticalList, n_size[n]);
                 endTime = System.currentTimeMillis();
 
@@ -167,6 +179,8 @@ public class Main {
                 System.out.println("Tiempo total: " + (endTime - startTime) + " milisegundos");
                 System.out.println("N° total de accesos a disco: " + DISK_ACCESSES);
                 System.out.println("");
+                fosH.close();
+                oosH.close();
             }
         }
         // // Leer la lista de enteros por bloque (menos enteros pues son mas pesados)
