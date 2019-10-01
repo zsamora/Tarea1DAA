@@ -168,7 +168,6 @@ public class Main {
                 // Run second algorithm measuring the time
                 startTime = System.currentTimeMillis();
                 int distance2 = secondAlgorithm.calculateDistance(X, Y, HorizontalList, VerticalList, n_size[n]);
-                int distance2 = 0;
                 endTime = System.currentTimeMillis();
 
                 // Print the results
