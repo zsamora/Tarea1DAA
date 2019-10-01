@@ -139,23 +139,6 @@ public class Main {
 
             }
         }
-        // // Output Stream para escribir fronteras horizontales
-        // FileOutputStream fosH = new FileOutputStream(HorizontalList);
-        // ObjectOutputStream oosH = new ObjectOutputStream(fosH);
-        // // Output Stream para escribir fronteras verticales
-        // FileOutputStream fosV = new FileOutputStream(VerticalList);
-        // ObjectOutputStream oosV = new ObjectOutputStream(fosV);
-        // Crear N caracteres y agregarlos al string builder
-        // for (int i = 0; i < N; i++) {
-        //     strBuilderX.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
-        //     strBuilderY.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
-        //     intBuilder.add(i+1);
-        //     if ((i + 1) % (B / 4) == 0 || i == N - 1) {
-        //         oosI.writeObject(intBuilder);
-        //         oosH.writeObject(intBuilder);
-        //         oosV.writeObject(intBuilder);
-        //         intBuilder = new ArrayList<Integer>();
-        //         DISK_ACCESSES +=3;
 
         // oosI.close();
         // oosV.close();
@@ -186,12 +169,12 @@ public class Main {
         // //firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
         // // Prueba real
         // startTime = System.currentTimeMillis();
-        // int distance = firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
-        // //int distance2 = secondAlgorithm.calculateDistance(X, Y, HorizontalList, VerticalList, N);
+        // //int distance = firstAlgorithm.calculateDistance(X, Y, IntegerList, N);
+        // int distance2 = secondAlgorithm.calculateDistance(X, Y, HorizontalList, VerticalList, N);
         // endTime = System.currentTimeMillis();
         // System.out.println();
         // System.out.print("La distancia es: ");
-        // System.out.println(distance);
+        // System.out.println(distance2);
         // // Leer la lista de enteros por bloque (menos enteros pues son mas pesados)
         // /*FileInputStream fisInt = new FileInputStream(HorizontalList);
         // ObjectInputStream oisInt = new ObjectInputStream(fisInt);

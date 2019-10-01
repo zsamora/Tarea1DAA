@@ -1,5 +1,6 @@
 import java.io.*;
 import java.lang.Math;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SecondAlgorithm {
@@ -8,7 +9,7 @@ public class SecondAlgorithm {
     int N;
     int M;
     int B;
-    String filesDir="C:\\Users\\Agustín\\Desktop\\Material Universidad\\2019-2\\Diseño y Análisis de Algoritmos\\Tarea 1\\files";
+    String filesDir = "C:\\Users\\Agustín\\Desktop\\Material Universidad\\2019-2\\Diseño y Análisis de Algoritmos\\Tarea 1\\files";
     ObjectOutputStream oosH;
     String HorizontalList;
     String VerticalList;
@@ -20,159 +21,128 @@ public class SecondAlgorithm {
         this.oosH = oosH;
     }
 
-    //leer la frontera de entrada y almacenarla en un arreglo que contenga espacio para los nuevos elementos (inFrontier)
-
-    public void fillTable(char[] verticalC, char[] horizontalC, int[][] inFrontier ){
-
-        int weight;
-
-        for(int row=1;row<N;row++){
-            for(int column=1;column<N;column++){
-                if(verticalC[row-1]==horizontalC[column-1]) {
-                    weight = 0;
-                }else{
-                    weight=1;
-                }
-                inFrontier[row][column]=Math.min(Math.min(inFrontier[row][column-1]+1,
-                        inFrontier[row-1][column]+1),inFrontier[row-1][column-1]+weight);
-
-
-            }
-        }
-
-
-    }
-
     public int calculateDistance(String X, String Y, String HorizontalList, String VerticalList, int N) throws IOException, ClassNotFoundException {
         this.X = X;
         this.Y = Y;
         this.HorizontalList = HorizontalList;
         this.VerticalList = VerticalList;
-        // Cantidad de bloques del string que se leen en cada iteración
-        int blocks = 1;
-        // (bloques X + bloques Y) + (frontera X + frontera Y) * size(int) + (cuadrícula interna) * size(int)
-        int totalUsed = 2*blocks + 4*2*blocks + 4*blocks*blocks;
-        // Calcular cantidad de bloques
-        while (totalUsed < M)
-            blocks++;
-        if (totalUsed > M)
-            blocks--;
-
-        // Elementos a almacenar en memoria principal
-        int[][] table = new int[blocks*B+1][blocks*B+1];
-        char[] partialX;
-        char[] partialY;
-
-        // Cantidad de iteraciones (horizontal) (total es it al cuadrado)
-        int it = (N / (B * blocks));
-
-        //creamos los streams de lectura y escritura
-        //Para las columnas
-        FileOutputStream fos_c=new FileOutputStream(filesDir + "\\" + "frontier_column.bin");
-        ObjectOutputStream oos_c=new ObjectOutputStream(fos_c);
-        FileInputStream fis_c=new FileInputStream(filesDir + "\\" + "frontier_column.bin");
-        ObjectInputStream ois_c=new ObjectInputStream(fis_c);
-
-        //Para las filas
-        FileOutputStream fos_r=new FileOutputStream(filesDir + "\\" + "frontier_row.bin");
-        ObjectOutputStream oos_r=new ObjectOutputStream(fos_r);
-        FileInputStream fis_r=new FileInputStream(filesDir + "\\" + "frontier_row.bin");
-        ObjectInputStream ois_r=new ObjectInputStream(fis_r);
-
+        //Para las fronteras horizontales
+        FileInputStream fisH = new FileInputStream(HorizontalList);
+        ObjectInputStream oisH = new ObjectInputStream(fisH);
+        //Para las fronteras horizontales
+        FileInputStream fisV = new FileInputStream(VerticalList);
+        ObjectInputStream oisV = new ObjectInputStream(fisV);
         //Para los input X e Y
-        FileInputStream fisX = new FileInputStream(X);
-        ObjectInputStream oisX = new ObjectInputStream(fisX);
         FileInputStream fisY = new FileInputStream(Y);
         ObjectInputStream oisY = new ObjectInputStream(fisY);
 
-
-
-        //llenamos los archivos de primera columna y primera fila
-        int k=0;
-        //el arreglo auxiliar toma la posicion de la primera fila de la matriz
-        int[] auxArr=table[1];
-        for(int i=0;i<N/blocks;i++){
-            for(int j=0;j<blocks*128+1;j++){
-                auxArr[j]=k;
-                if(j<blocks*128){
-                    k++;
+        // Cantidad de bloques del string que se leen en cada iteración
+        int blocks = 1;
+        // (bloques X + bloques Y) + (frontera X + frontera Y) * size(int) + (cuadrícula interna) * size(int)
+        int totalUsed = 2 * blocks + 4 * 2 * blocks + 4 * blocks * blocks;
+        // Calcular cantidad de bloques
+        while (totalUsed < (M / this.B) && blocks < (N / this.B)) {
+            blocks++;
+            totalUsed = 2 * blocks + 4 * 2 * blocks + 4 * blocks * blocks;
+            if (totalUsed > M) {
+                blocks--;
+                break;
+            }
+        }
+        // Cantidad de iteraciones (horizontal) (total es it al cuadrado)
+        int it = N / (B * blocks);
+        // Variables en las esquinas izquierdas superior
+        int rowvar = 0;
+        int auxvar = 0;
+        int i = 0; // fila de submatriz
+        int j = 0; // columna de submatriz
+        ArrayList<Integer> row;
+        ArrayList<Integer> rowaux = new ArrayList<Integer>();
+        ArrayList<Integer> col = new ArrayList<Integer>();
+        ArrayList<Integer> colaux = new ArrayList<Integer>();
+        String subY = "";
+        while (i < it) {
+            // Aumentar la variable auxiliar de la fila
+            if (i > 0)
+                rowvar += blocks*B;
+            auxvar += rowvar;
+            row = rowaux;
+            FileInputStream fisX = new FileInputStream(X);
+            ObjectInputStream oisX = new ObjectInputStream(fisX);
+            while (j < it) {
+                // Llenamos la memoria con k bloques de strings, que tiene 4 bloques de enteros asociado
+                String subX = "";
+                for (int l = 0; l < blocks; l++) {
+                    subX += (String) oisX.readObject();
+                    for (int k = 0; k < 4; k++)
+                        row.addAll((ArrayList<Integer>) oisH.readObject());
+                    Main.DISK_ACCESSES += 5;
+                }
+                System.out.println("---- Row ----");
+                System.out.println(row);
+                System.out.println("---- subX ----");
+                System.out.println(subX);
+                // Primera columna de submatrices
+                if (j == 0) {
+                    // Llenamos la memoria con k bloques de strings, que tiene 4 bloques de enteros asociado
+                    for (int l = 0; l < blocks; l++) {
+                        subY += (String) oisY.readObject();
+                        for (int k = 0; k < 4; k++)
+                            col.addAll((ArrayList<Integer>) oisV.readObject());
+                        Main.DISK_ACCESSES += 5;
+                    }
+                    System.out.println("---- Col ----");
+                    System.out.println(col);
+                    System.out.println("---- subY ----");
+                    System.out.println(subY);
+                }
+                else {
+                    // Cambiamos el col con el colaux, frontera vertical calculada
+                    col = colaux;
+                    System.out.println("---- Col ----");
+                    System.out.println(col);
+                }
+                ArrayList<ArrayList<Integer>> newrowandcol = calculateMatrix(auxvar, row, col, subX, subY);
+                rowaux = newrowandcol.get(0);
+                colaux = newrowandcol.get(1);
+                auxvar += blocks*B;
+                j++;
+            }
+            i++;
+            fisX.close();
+            oisX.close();
+        }
+        fisY.close();
+        oisY.close();
+        return rowaux.get(rowaux.size()-1);
+    }
+    public static ArrayList<ArrayList<Integer>> calculateMatrix (int upLeft, ArrayList<Integer> row, ArrayList<Integer> col,
+                                                                 String subX, String subY) {
+        ArrayList<Integer> rowaux;
+        int up;
+        int downLeft;
+        int newDownLeft;
+        for (int i = 0; i < col.size(); i++) {
+            downLeft = col.get(i);
+            rowaux = new ArrayList<Integer>();
+            for (int j = 0; j < row.size(); j++) {
+                up = row.get(j);
+                if (subX.charAt(j) == subY.charAt(i))
+                    newDownLeft = Math.min(upLeft, Math.min(downLeft + 1, up + 1));
+                else
+                    newDownLeft = Math.min(upLeft + 1, Math.min(downLeft + 1, up + 1));
+                rowaux.add(newDownLeft);
+                downLeft = newDownLeft;
+                upLeft = up;
+                if (j == row.size() - 1) {
+                    col.set(i,newDownLeft);
                 }
             }
-            oos_r.writeObject(auxArr);
-            oos_c.writeObject(auxArr);
+            row = rowaux;
         }
-
-
-
-
-        //
-
-
-
-        for(int row=0;row<it;row++){
-            for(int col=0;col<it;col++){
-
-                //leemos las porciones de X e Y que corresponden
-                partialX = (char[]) oisX.readObject();
-                partialY = (char[]) oisY.readObject();
-
-                //recuperamos la frontera columna
-                //en caso de encontrarnos al inicio de una fila, leemos del archivo columna
-                if(col==0){
-                     auxArr = (int[]) ois_c.readObject();
-                 //en caso contrario, copiamos la frontera columna de la tabla llenada en la iteracion anterior
-                 }else{
-                     for(int i=0; i<auxArr.length;i++){
-                         auxArr[i]=table[i][auxArr.length-1];
-                     }
-                 }
-                 for(int i=0;i<auxArr.length;i++){
-                     table[i][0]=auxArr[i];
-                 }
-
-                 //ahora traspasamos la fila frontera, que en cualquier caso debemos leer de memoria externa
-                auxArr = (int[]) ois_r.readObject();
-
-                //ahora podemos rellenar la matriz con los nuevos valores
-                fillTable(partialY,partialX,table);
-
-                //luego escribimos la fila frontera resultante
-                oos_r.writeObject(table[blocks*128]);
-
-
-
-            }
-        }
-
-
-
-        return table[128*blocks][128*blocks];
+        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+        res.add(row);
+        res.add(col);
+        return res;
     }
-
-
-
-
-
-
-    public static void main(String[] args) {
-        int [] arr={1,2,3};
-        int [][] mat ={{4,5,6},{7,8,9},{10,11,12}};
-        int [][] arr2= new int[2][3];
-
-        try {
-            FileOutputStream fos = new FileOutputStream("C:\\Users\\Agustín\\Desktop\\Material Universidad\\2019-2\\Diseño y Análisis de Algoritmos\\Tarea 1\\files" + "\\" + "test.bin");
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(arr);
-            oos.close();
-            fos.close();
-
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        int res =
-    }
-
-
 }
