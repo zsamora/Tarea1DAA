@@ -98,6 +98,7 @@ public class Main {
 
                 // Set algorithms
                 firstAlgorithm = new FirstAlgorithm(m_size[m], B);
+                // ACA INICIALIZAR EL SEGUNDO ALGORITMO
                 
                 if(m==0){
                     // Run first algorithm measuring the time
@@ -115,16 +116,30 @@ public class Main {
                     System.out.println("");
                 }
 
-                // Simple way to wait between ejecutions
-                int wait = 0;
-                while(wait < 1000000){
-                    wait++;
-                }
+                // Set disk accesses again
+                DISK_ACCESSES = DISK_ACCESSES_TEMP;
+
+                // Run seoncd algorithm measuring the time
+                startTime = System.currentTimeMillis();
+                // ACA CORRER EL SEGUNDO ALGORITMO!!
+                // int distance2 = secondAlgorithm.calculateDistance(X, Y, IntegerList, n_size[n]);
+                endTime = System.currentTimeMillis();
+
+                // Print the results
+                System.out.println("");
+                System.out.println("Segundo algoritmo:");
+                System.out.print("La distancia es: ");
+                // AL AGREGAR EL SEGUNDO ALGORITMO DESCOMENTAR LA LINEA SIGUIENTE!!
+                // System.out.println(distance2);
+                System.out.println("Tiempo total: " + (endTime - startTime) + " milisegundos");
+                System.out.println("N° total de accesos a disco: " + DISK_ACCESSES);
+                System.out.println("");
+
                 System.out.println("");
 
             }
         }
-        // Output Stream para escribir fronteras horizontales
+        // // Output Stream para escribir fronteras horizontales
         // FileOutputStream fosH = new FileOutputStream(HorizontalList);
         // ObjectOutputStream oosH = new ObjectOutputStream(fosH);
         // // Output Stream para escribir fronteras verticales
