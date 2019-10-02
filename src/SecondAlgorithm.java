@@ -9,7 +9,6 @@ public class SecondAlgorithm {
     int N;
     int M;
     int B;
-    String filesDir = "C:\\Users\\Agustín\\Desktop\\Material Universidad\\2019-2\\Diseño y Análisis de Algoritmos\\Tarea 1\\files";
     ObjectOutputStream oosH;
     String HorizontalList;
     String VerticalList;
